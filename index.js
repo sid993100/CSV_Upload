@@ -1,24 +1,41 @@
-const express=require('express');
-const Port=8000;
-const app=express();
+// setting up express server
+const express           = require('express');
+const app               = express();
+const expressLayout     = require('express-ejs-layouts');
+const db                = require('./config/mongoose');
 
-const db=require('./config/mongoose');
+// defining port number
+const port              = process.env.port || 8000;
 
-//static
-app.use(express.static('./assets'));
+// added a parser
+app.use(express.urlencoded({extended: true}));
 
-//use ejs
-app.set('view engine','ejs');
+// for getting static files
+app.use(express.static('assets'));
+
+
+// setting up view engine
+app.set('view engine', 'ejs');
 app.set('views','./views');
 
 
+// Layouts
+app.use(expressLayout);
 
-//make the uploads available to the browser
-app.use('/uploads',express.static(__dirname+'/uploads'));
+// extract styles and script from sub pages into layouts
+app.set('layout extractStyles', true);
+app.set('layout extractScripts', true);
 
-app.use('/',require('./routes'));
-app.listen(Port,function(err){
-    if(err){conseole.log("error in starting the server:-",err);return}
-    console.log("server is up and running on port:-",Port);
+
+// Acquiring all the routes
+app.use('/', require('./routes'));
+
+
+// Running the server on defined port
+app.listen(port, (err) => {
+    if (err) {
+        console.error("Error in running the server", err);
+    }
+
+    console.log(`Server is running on port: ${port}`);
 })
-

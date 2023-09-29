@@ -1,14 +1,21 @@
-//importing express
-const express=require('express');
-const router=express.Router();
-
-const csvController=require('../controllers/home_controller');
-
-console.log("routes are loaded");
-
-router.get('/',csvController.Home);
-router.use('/create',require('./csv'));
+const express               = require('express');
+const router                = express.Router();
+const multer                = require('multer');
+const controller            = require('../controller/homeController');
+const { view }              = require('../controller/viewController');
 
 
-//exporting router
-module.exports=router;
+const upload = multer({ dest:'uploadFiles' })
+
+
+router.get('/', controller.home);
+
+router.post('/upload',upload.single('file'), controller.upload);
+
+router.get('/delete/:id', controller.delete);
+
+router.get('/view/:id', view);
+
+
+module.exports = router;
+

@@ -1,46 +1,56 @@
-<html>
-<head><title>Homepage</title>
 <link rel="stylesheet" href="/css/home.css">
-</head>
-<body>
-
-<!-- -------------------------------------=======================form for input file=======================---------------------------------------------- -->
-    <div class="file-input-div">
-<form action="/create/up" method="POST" enctype="multipart/form-data" class="file-input-form">
-    <div class="file-input-header"><h1>Upload CSV file Here</h1></div>
-    <div class="file-input">    <input type="file" name="avatar" accept=".csv" id="CSVid">
-    </div>
-    <div class="form-button"><button>Upload</button></div>
-    
-</form>
-</div>
-
-<!-- ===========================================================================Uploaded-Files-Display-==================================================== -->
-<div class="uploaded-files-div">
-    <%if(aa.length==0){%>
-        <h1>Container is Empty</h1>
-        <%}else{%>
-
-<div class="headings">
-    <div class="hedings-One">Name</div>
-    <div class="hedings-Two">Date</div>
-    <div class="hedings-Three">Time</div>
-    <div class="hedings-Four">Delete</div>
-</div>     
-<ul>
-    <%for(let a of aa){%>
-        <li class="file-display-li">
-     <div> <a href="/create/view/<%=a._id%>" target="_blank"><%=a.filename%></a></div>
-     <div class="ulLiDivThree">  <a href="/create/view/<%=a._id%>" target="_blank"><%=a.createdAt.toLocaleString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'})%></a></div>
-     <div class="ulLiDivThree"> <a href="/create/view/<%=a._id%>" target="_blank"><%=a.createdAt.toLocaleTimeString()%></a></div> 
-     <div class="ulLiDivThree"> <a href="/create/delete/<%=a._id%>">DELETE</a></div>
-        </li>
-        <%}%>  
-</ul>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 
-<%}%>
-</div>
+<main>
+    <h1 id="heading">Upload a File Here</h1>
+    <p id="para">Reads CSV file and displays it's content in Tabular form</p>
 
-</body>
-</html>
+
+    <center id="fileContainer">
+        <div id="fileUploadContainer">
+            <form action="/upload" method="POST" enctype="multipart/form-data">
+                <input id="fileInput" type="file" name="file" accept=".csv">
+                <button id="Upload-btn" type="submit">Upload</button>
+            </form>
+        </div>
+
+        <div id="FileContainer">
+            <div id="uploadedFileHeading">
+                <h1>Uploaded File</h1>
+            </div>
+
+            <% if ( Files.length === 0  ) {%>
+                <h2>Please Upload a File!</h2>
+            <% } else { %>
+            <table>
+                <thead>
+                    <tr class="tableHead">
+                        <th>Name</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>View</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <% let sl = 0 %>
+                    
+                    <% for (let file of Files) {%>
+                    <tr>
+                        
+                        <td> <%= ++sl %>. <%= file.FileName %> </td>
+                        <td> <%= file.createdAt.toLocaleDateString() %></td>
+                        <td> <%= file.createdAt.toLocaleTimeString() %> </td>
+                        <td>  <a href="/view/<%= file._id %>"> <i class="fa-solid fa-up-right-from-square"></i> </a></td>
+                        <td> <a href="/delete/<%= file._id %>"> <i class="fa-solid fa-trash-can"></i> </a></td>
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        <% } %>
+        </div>
+    </center> 
+
+</main>
