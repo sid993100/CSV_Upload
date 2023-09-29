@@ -2,15 +2,11 @@
 Simple CSV file uploader and viewer data
 
 
-Git Repository link: https://github.com/yash0102/CSVMaster
-
 Installation
 To install CSVMaster, please follow these steps:
 
 Clone this repository using the following command:
-
-$ git clone (https://github.com/yash0102/CSVMaster.git)
-Install the required dependencies using the following command:
+git 
 
 $ npm install 
 Start the application using the following command:
