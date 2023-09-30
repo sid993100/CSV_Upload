@@ -1,21 +1,21 @@
-const express               = require('express');
-const router                = express.Router();
-const multer                = require('multer');
-const controller            = require('../controller/homeController');
-const { view }              = require('../controller/viewController');
+const express  = require ('express');
+const { home } = require('nodemon/lib/utils');
+const router = express.Router();
 
+const homeController = require('../controllers/home_controller');
 
-const upload = multer({ dest:'uploadFiles' })
+//console.log('Router Loaded');
 
+//render homepage
+router.get('/', homeController.homePage);
 
-router.get('/', controller.home);
+//upload CSV
+router.use('/file/uploads', homeController.uploadFile);
 
-router.post('/upload',upload.single('file'), controller.upload);
+//view CSV File in Table format
+router.use('/view/:id', homeController.displayCSV);
 
-router.get('/delete/:id', controller.delete);
-
-router.get('/view/:id', view);
-
+//delete CSV file
+router.use('/delete/:id', homeController.deleteCSV);
 
 module.exports = router;
-

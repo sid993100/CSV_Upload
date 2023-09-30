@@ -1,41 +1,48 @@
-// setting up express server
-const express           = require('express');
-const app               = express();
-const expressLayout     = require('express-ejs-layouts');
-const db                = require('./config/mongoose');
+require('dotenv').config()
+const express = require('express');
+const app = express();
+// const db = require('./config/mongoose');
+const expressLayouts = require('express-ejs-layouts');
+const session = require('express-session');
+const flash = require('connect-flash');
+const customeMW = require('.//config/middleware');
 
-// defining port number
-const port              = process.env.port || 8000;
+//middleware to use assets
+app.use(express.static('./assets'));
+app.use(express.urlencoded());
+app.use(expressLayouts);
 
-// added a parser
-app.use(express.urlencoded({extended: true}));
-
-// for getting static files
-app.use(express.static('assets'));
-
-
-// setting up view engine
-app.set('view engine', 'ejs');
-app.set('views','./views');
-
-
-// Layouts
-app.use(expressLayout);
-
-// extract styles and script from sub pages into layouts
+//extract styles and scripts from layouts
 app.set('layout extractStyles', true);
 app.set('layout extractScripts', true);
 
 
-// Acquiring all the routes
+//setting view engine as ejs
+app.set('view engine', 'ejs');
+app.set('views', './views');
+
+// ************************  Database Connection  **********************************//
+const {connectMonggose} = require('./config/mongoose')
+connectMonggose();
+
+
+//to create an duse sessions
+app.use(session({
+  secret: process.env.SECRET,
+  saveUninitialized: true,
+  resave: true
+}));
+
+//using connect-flash to display flash notification in FE
+app.use(flash());
+app.use(customeMW.setFlash);
+
+//router
 app.use('/', require('./routes'));
 
-
-// Running the server on defined port
-app.listen(port, (err) => {
-    if (err) {
-        console.error("Error in running the server", err);
-    }
-
-    console.log(`Server is running on port: ${port}`);
+// ************************   Port Start   ********************************//
+const PORT = process.env.PORT || 8500;
+app.listen(PORT,()=>{
+    console.log(`My server start on this port ${PORT}`)
 })
+

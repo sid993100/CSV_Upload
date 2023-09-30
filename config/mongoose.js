@@ -1,27 +1,18 @@
+require('dotenv').config()
 const mongoose = require('mongoose');
 
+exports.connectMonggose =()=>{
+  mongoose.connect(process.env.DATABASE_URL,
+  {
+      useNewUrlParser: true
+  })
+  .then((e)=>console.log("Connected to Mongodb =>> CSV Upload"))
+  .catch((e)=>console.log("Not Connect Mongodb"))
+}
 
-// connnect to databases
-// mongoose.connect('mongodb://127.0.0.1/CSVMaster');
 
-const DB = "mongodb+srv://yashsonkar0102:GvSDXUS8XDMFNcli@csvmaster.4p09mjm.mongodb.net/?retryWrites=true&w=majority";
-
-    mongoose
-    .connect(DB)
-    .then(() => {
-        console.log("Connection successful!");
-    })
-    .catch((err) => console.log("no connection " + err));
-
-// acquire the connection 
-const db = mongoose.connection;
-
-// Error 
-db.once('error', console.error.bind(console,"Error in connecting to Database"));
-
-// up and running then print the message
-db.once('open', ()=> {
-    console.log("Database connected successfully");
-})
-
-module.exports = db;
+// const db = mongoose.connection;
+// db.on('error', console.error.bind('error in connecting to the db'));
+// db.once('open', function(){
+//   console.log('Successfully connected to the DB');
+// })
